@@ -1,0 +1,12 @@
+<resources>
+	<string-array name="text_size_names">
+		<item>@string/small</item>
+		<item>@string/medium</item>
+		<item>@string/big</item>
+	</string-array>
+	<string-array name="text_size_values">
+		<item>12</item>
+		<item>16</item>
+		<item>22</item>
+	</string-array>
+</resources>

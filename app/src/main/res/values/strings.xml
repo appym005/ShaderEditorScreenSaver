@@ -1,0 +1,286 @@
+<resources>
+	<string name="app_name">Shader Editor</string>
+
+	<!-- MainActivity -->
+	<string name="drawer_open">Open drawer</string>
+	<string name="drawer_close">Close drawer</string>
+	<string name="no_shaders">No shaders</string>
+	<string name="unsuitable_text">Sorry, this text is unsuitable.</string>
+	<string name="cannot_open_content">Sorry, there is no app that can open URLs</string>
+	<string name="insert_tab">Insert tab</string>
+	<string name="run_code">Run code</string>
+	<string name="toggle_code">Toggle code</string>
+	<string name="undo">Undo</string>
+	<string name="redo">Redo</string>
+	<string name="save_shader">Save shader</string>
+	<string name="add_shader">New shader</string>
+	<string name="duplicate_shader">Save as new shader</string>
+	<string name="delete_shader">Delete shader</string>
+	<string name="share_shader">Share shader</string>
+	<string name="update_wallpaper">Update wallpaper</string>
+	<string name="set_as_wallpaper">Set as wallpaper</string>
+	<string name="update_screensaver">Update screen saver</string>
+	<string name="set_as_screensaver">Set as screen saver</string>
+	<string name="screensaver_set">Screen saver shader selected</string>
+	<string name="pick_screensaver_manually">Choose Shader Editor in Screen saver settings</string>
+	<string name="screensaver_description">Render a Shader Editor shader as a screen saver</string>
+	<string name="faq">FAQ</string>
+	<string name="show_extra_keys">Show Extra Keys</string>
+	<string name="settings">Settings</string>
+	<string name="sure_remove_shader">Are you sure you want to delete this shader?</string>
+	<string name="rename_shader">Rename shader</string>
+	<string name="enter_name">Enter a name</string>
+	<string name="wallpaper_set">Wallpaper set</string>
+	<string name="cannot_set_wallpaper">Cannot set a wallpaper</string>
+	<string name="pick_live_wallpaper_manually">You need to pick this app as Live Wallpaper first</string>
+	<string name="menu_btn">More options</string>
+	<string name="show_errors">Show errors</string>
+	<string name="shader_saved">Shader saved</string>
+	<string name="shader_disabled_after_crash">The previous shader crashed Shader Editor and was commented out.</string>
+
+	<string name="new_shader_template" translatable="false">#ifdef GL_ES\nprecision mediump float;\n#endif\n\nuniform vec2 resolution;\nuniform float time;\n\nvoid main(void)\n{\n\tvec2 p = gl_FragCoord.xy / resolution.xy;\n\tgl_FragColor = vec4(p.x, p.y, 0.0, 1.0);\n}</string>
+	<string name="details">Details</string>
+
+	<!-- PreferencesFragment -->
+	<string name="preferences">Preferences</string>
+	<string name="wallpaper">Wallpaper</string>
+	<string name="save_battery">Save battery</string>
+	<string name="save_battery_summary">Stop rendering when battery is low</string>
+	<string name="sort_by_last_modification">Sort by last modification</string>
+	<string name="sort_by_last_modification_summary">Sort shaders by last modification</string>
+	<string name="sensors">Sensors</string>
+	<string name="sensor_delay">Sensor Delay</string>
+	<string name="no_shader_selected">No shader selected</string>
+	<string name="shader">Shader</string>
+	<string name="editor">Editor</string>
+	<string name="run_mode">Run mode</string>
+	<string name="update_delay">Update delay</string>
+	<string name="text_size">Text size</string>
+	<string name="font">Font</string>
+	<string name="use_ligatures">Use Ligatures</string>
+	<string name="use_ligatures_summary">Join some characters like &lt;= into ≤</string>
+	<string name="tab_width">Tab width</string>
+	<string name="use_tab_for_indent">Use tab key</string>
+	<string name="use_tab_for_indent_summary">Use tab key for indenting instead of focus navigation.</string>
+	<string name="export_tabs">Export tabs</string>
+	<string name="export_tabs_summary">Export tabs instead of converting to spaces when sharing</string>
+	<string name="show_insert_tab">Show insert tab</string>
+	<string name="show_insert_tab_summary">Show insert tab menu item</string>
+	<string name="save_on_run">Save on run</string>
+	<string name="save_on_run_summary">Save changes when running manually</string>
+	<string name="disable_highlighting">Disable highlighting</string>
+	<string name="disable_highlighting_summary">Disable highlighting for big shaders</string>
+	<string name="auto_save">Auto save</string>
+	<string name="auto_save_summary">Save shader automatically</string>
+	<string name="auto_hide_extra_keys">Auto hide extra keys</string>
+	<string name="auto_hide_extra_keys_summary">Automatically hide the extra keys row above the soft keyboard</string>
+	<string name="default_new_shader">Default new shader</string>
+	<string name="import_export">Import &amp; Export</string>
+	<string name="import_shaders_files">Import shaders from files</string>
+	<string name="import_shaders_files_summary">Import all *.glsl files from Download/ShaderEditor</string>
+	<string name="export_shaders_files">Export shaders to files</string>
+	<string name="export_shaders_files_summary">Export all shaders to Download/ShaderEditor</string>
+	<string name="import_database">Import database</string>
+	<string name="import_database_summary">Import a previously exported SQLite database</string>
+	<string name="export_database">Export database</string>
+	<string name="export_database_summary">Export all shaders into a SQLite database</string>
+	<string name="show_line_numbers">Show Line Numbers</string>
+	<string name="show_line_numbers_summary">Show Line Numbers at the start of each line.</string>
+	<string name="enable_notification_listener">To use the notificationCount or lastNotificationTime uniform, please enable the Notification Listener in Settings.</string>
+	<string name="go_to_settings">Go to Settings</string>
+	<string name="enable_notification_listener_title">Enable Notification Listener</string>
+	<string name="hide_native_suggestions">Hide native suggestions</string>
+	<string name="hide_native_suggestions_summary">Hides the soft keyboard\'s suggestions. If problems arise, turn this setting off.</string>
+
+	<!-- Preferences -->
+	<string name="run_auto">Auto run on change</string>
+	<string name="run_manually">Run manually</string>
+	<string name="run_manually_extra">Run in extra activity</string>
+	<string name="run_manually_new">Run as a new task</string>
+	<string name="monospace">Monospace</string>
+	<string name="fira_code">Fira Code</string>
+	<string name="ibm_plex_mono">IBM Plex Mono</string>
+	<string name="jetbrains_mono">JetBrains Mono</string>
+	<string name="roboto_mono">Roboto Mono</string>
+	<string name="source_code_pro">Source Code Pro</string>
+	<string name="fastest">Fastest</string>
+	<string name="game">Game</string>
+	<string name="normal">Normal</string>
+	<string name="ui">UI</string>
+	<string name="small">Small</string>
+	<string name="medium">Medium</string>
+	<string name="big">Big</string>
+
+	<!-- WallpaperService -->
+	<string name="wallpaper_description">Write your own live wallpaper</string>
+
+	<!-- PreviewActivity -->
+	<string name="preview">Preview</string>
+
+	<!-- UniformPagesFragment -->
+	<string name="add_uniform">Add uniform/texture</string>
+	<string name="sampler_2d">sampler2D</string>
+	<string name="sampler_cube">samplerCube</string>
+	<string name="preset">preset</string>
+	<string name="search">Search</string>
+
+	<!-- UniformPresetPageFragment -->
+	<string name="uniform_format">%1$s (%2$s)</string>
+	<string name="resolution_in_pixels">Surface resolution in pixels</string>
+	<string name="time_in_seconds_since_load">Time in seconds since load</string>
+	<string name="int_seconds_since_load">Time in integer seconds since load</string>
+	<string name="fractional_part_of_seconds_since_load">Fractional part of seconds since load</string>
+	<string name="frame_number">Current frame number, starting with 0</string>
+	<string name="time_in_cycle">Time within a cycle of #define FTIME_PERIOD seconds from -1.0 to +1.0</string>
+	<string name="touch_position_in_pixels">Position of the first touching finger in pixels</string>
+	<string name="touch_start_position_in_pixels">Position of the initial touch in pixels</string>
+	<string name="number_of_touches">Number of touches</string>
+	<string name="positions_of_touches">Positions of touches in pixels</string>
+	<string name="linear_acceleration_vector">Linear acceleration in m/s^2</string>
+	<string name="gravity_vector">Gravity vector in m/s^2</string>
+	<string name="gyroscope">Rate of rotation in rad/s around the device\'s x, y, and z axis integrated over time</string>
+	<string name="last_notification_time">Time since the last notification. Is NaN if no notifications have happened yet.</string>
+	<string name="device_orientation">Azimuth (-π to π), pitch (-π to π) and roll (-π/2 to π/2) of the device</string>
+	<string name="device_inclination">Geomagnetic inclination angle of the device in radians</string>
+	<string name="device_rotation_matrix">Rotation matrix around the world\'s coordinate system, that is, when the device\'s X axis points toward East, the Y axis points to the North Pole and the device is facing the sky</string>
+	<string name="device_rotation_vector">The rotation vector represents the orientation of the device as a combination of an angle and an axis, in which the device has rotated through an angle θ around an axis of x, y, z</string>
+	<string name="device_inclination_matrix">Rotation matrix transforming the geomagnetic vector into the same coordinate space as gravity</string>
+	<string name="magnetic_field">Geomagnetic field strength along the x, y and z axis in μT</string>
+	<string name="night_mode">Night mode, 1 if set, 0 if not</string>
+	<string name="notification_count">Count of active notifications</string>
+	<string name="light">Ambient light level in SI lux units</string>
+	<string name="pressure">Atmospheric pressure in hPa (millibar)</string>
+	<string name="proximity">Proximity sensor distance measured in centimeters</string>
+	<string name="battery_level">Battery level from 0.0 to 1.0</string>
+	<string name="power_connected">1 when power cable is connected, 0 otherwise</string>
+	<string name="wallpaper_offset">Wallpaper offset from 0.0 to 1.0</string>
+	<string name="previous_frame">Previous rendered frame</string>
+	<string name="camera_back">Back camera (only on Ice Cream Sandwich or better)</string>
+	<string name="camera_front">Front camera (only on Ice Cream Sandwich or better)</string>
+	<string name="camera_addent">Addent to camera texture coordinate, see also cameraOrientation (only on Ice Cream Sandwich or better)</string>
+	<string name="camera_orientation">Multiply with texture coordinate with this matrix to rotate camera frame to device orientation (cameraAddent + uv * cameraOrientation; only on Ice Cream Sandwich or better)</string>
+	<string name="date_time">Year, month, day and time in seconds</string>
+	<string name="daytime">Hour, minute and seconds</string>
+	<string name="start_random">Random value from 0.0 to 1.0, initialized at load</string>
+	<string name="media_volume_level">Media volume level from 0.0 to 1.0</string>
+	<string name="microphone_amplitude">Microphone input amplitude from 0.0 to 1.0</string>
+
+	<!-- UniformSampler2dPageFragment -->
+	<string name="texture_preview">Texture preview</string>
+	<string name="texture_name_noise">noise</string>
+	<string name="texture_name_rgba_noise">rgba_noise</string>
+	<string name="choose_image">Choose image</string>
+	<string name="no_textures">No textures available</string>
+	<string name="texture_size_format" formatted="false">%d x %d</string>
+
+	<!-- CropImageFragment -->
+	<string name="crop_image">Crop image</string>
+	<string name="cannot_pick_image">Cannot open image. Please try another app to choose an image.</string>
+	<string name="rotate_clockwise">Rotate clockwise</string>
+
+	<!-- CubeMapFragment -->
+	<string name="compose_sampler_cube">Compose cube map</string>
+	<string name="not_enough_faces">Not enough faces</string>
+	<string name="add_texture">Add texture</string>
+
+	<!-- CubeMapView -->
+	<string name="cube_map_negative_x">-X Left</string>
+	<string name="cube_map_positive_x">+X Right</string>
+	<string name="cube_map_negative_y">-Y Down</string>
+	<string name="cube_map_positive_y">+Y Up</string>
+	<string name="cube_map_negative_z">-Z Front</string>
+	<string name="cube_map_positive_z">+Z Back</string>
+
+	<!-- AbstractSamplerPropertiesFragment -->
+	<string name="texture_properties">Texture properties</string>
+	<string name="texture_size">Texture size in pixels</string>
+	<string name="face_size">Face size in pixels</string>
+	<string name="texture_name">Unique texture name</string>
+	<string name="input_texture_name">Give a name</string>
+	<string name="should_add_uniform">Add uniform sampler2D statement to source?</string>
+	<string name="save_texture">Save texture</string>
+	<string name="missing_name">You need to give a name</string>
+	<string name="invalid_texture_name">Invalid name, please choose a name you can use in a GLSL source</string>
+	<string name="illegal_rectangle">Illegal rectangle</string>
+	<string name="name_already_taken">Name already taken</string>
+	<string name="insert_uniform_sampler">Insert uniform sampler2D statement</string>
+
+	<!-- TextureViewFragment -->
+	<string name="view_texture">View texture</string>
+	<string name="remove_texture">Remove texture</string>
+	<string name="sure_remove_texture">Do you want to remove this texture?</string>
+	<string name="removed_invalid_texture">Texture was too big to handle</string>
+
+	<!-- TextureParametersFragment -->
+	<string name="texture_parameters">Texture parameters</string>
+	<string name="texture_minifying">Texture minifying function</string>
+	<string name="texture_magnification">Texture magnification function</string>
+	<string name="texture_wrap_s">Wrap parameter for texture coordinate s</string>
+	<string name="texture_wrap_t">Wrap parameter for texture coordinate t</string>
+
+	<!-- BackBufferParametersFragment -->
+	<string name="backbuffer_preset">Preset texture</string>
+	<string name="no_preset">(no preset)</string>
+	<string name="insert_code">Insert Code</string>
+
+	<!-- LoadSampleFragment -->
+	<string name="load_sample">Load sample</string>
+	<string name="sample_battery_name">Battery</string>
+	<string name="sample_battery_rationale">Horizontal battery gauge</string>
+	<string name="sample_camera_back_name">Back camera</string>
+	<string name="sample_camera_back_rationale">How to use the back camera (only on Ice Cream Sandwich or better)</string>
+	<string name="sample_circles_name">Circles</string>
+	<string name="sample_circles_rationale">Draw some circles</string>
+	<string name="sample_cloudy_conway_name">Cloudy Conway</string>
+	<string name="sample_cloudy_conway_rationale">A variation on Conway\'s Game of Life.</string>
+	<string name="sample_electric_fade_name">Electric Fade</string>
+	<string name="sample_electric_fade_rationale">Like Cloudy Conway but with a preset backbuffer.</string>
+	<string name="sample_game_of_life_name">Game of Life</string>
+	<string name="sample_game_of_life_rationale">Conway\'s Game of Life. Touch to spark new life.</string>
+	<string name="sample_gles_300_name">GLES 300</string>
+	<string name="sample_gles_300_rationale">Use GLES version 3.00</string>
+	<string name="sample_gravity_name">Gravity sensor</string>
+	<string name="sample_gravity_rationale">How to use the gravity uniform</string>
+	<string name="sample_gravitational_clock_name">Gravitational Clock</string>
+	<string name="sample_gravitational_clock_rationale">Analog time through warped spacetime, lensing arcs, and an orbiting seconds body</string>
+	<string name="sample_orientation_name">Orientation</string>
+	<string name="sample_orientation_rationale">How to use the orienation uniform</string>
+	<string name="sample_swirl_name">Swirl</string>
+	<string name="sample_swirl_rationale">How to distort textures with a swirl pattern</string>
+	<string name="sample_texture_name">Texture</string>
+	<string name="sample_texture_rationale">How to draw textures</string>
+	<string name="sample_touch_name">Touch</string>
+	<string name="sample_touch_rationale">How to process touch input</string>
+
+	<!-- Database -->
+	<string name="default_shader">Default</string>
+
+	<!-- ImportExport -->
+	<string name="write_access_required">Write access to external storage is required for export to work.</string>
+	<string name="read_access_required">Read access to external storage is required for import to work.</string>
+	<plurals name="n_shaders_successfully_exported">
+		<item quantity="one">%1$d shader successfully exported</item>
+		<item quantity="other">%1$d shaders successfully exported</item>
+	</plurals>
+	<plurals name="n_shaders_successfully_exported_m_failed">
+		<item quantity="one">%1$d shader successfully exported, %2$d failed</item>
+		<item quantity="other">%1$d shaders successfully exported, %2$d failed</item>
+	</plurals>
+	<string name="n_shaders_export_failed">Export failed: %1$s</string>
+	<plurals name="n_shaders_successfully_imported">
+		<item quantity="one">%1$d shader successfully imported</item>
+		<item quantity="other">%1$d shaders successfully imported</item>
+	</plurals>
+	<plurals name="n_shaders_successfully_imported_m_failed">
+		<item quantity="one">%1$d shader successfully imported, %2$d failed</item>
+		<item quantity="other">%1$d shaders successfully imported, %2$d failed</item>
+	</plurals>
+	<string name="import_failed">Import failed: %1$s</string>
+	<string name="no_shaders_found">No shaders found</string>
+	<string name="no_shaders_could_be_written">No shaders could be written to directory</string>
+	<string name="path_is_no_directory">Path %1$s is not a directory</string>
+	<string name="cant_find_db">Cannot find database</string>
+	<string name="storage_not_writeable">Cannot write database</string>
+	<string name="successfully_exported">Exported to Downloads</string>
+	<string name="successfully_imported">Database imported</string>
+</resources>

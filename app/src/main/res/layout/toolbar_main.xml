@@ -1,0 +1,59 @@
+<androidx.appcompat.widget.Toolbar
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:id="@+id/toolbar"
+	android:layout_width="match_parent"
+	android:layout_height="?attr/actionBarSize"
+	android:background="@color/primary_translucent"
+	android:theme="@style/ThemeOverlay.Material3.ActionBar"
+	app:popupTheme="@style/ThemeOverlay.Material3"
+	app:subtitleTextAppearance="@style/Subtitle"
+	app:titleTextAppearance="@style/Title">
+
+	<Button
+		android:id="@+id/menu_btn"
+		style="@style/IconButton"
+		android:layout_width="48dp"
+		android:layout_height="48dp"
+		android:layout_gravity="end"
+		android:layout_marginEnd="4dp"
+		app:icon="@drawable/ic_more_vert"
+		app:iconSize="24dp" />
+
+	<Button
+		android:id="@+id/toggle_code"
+		style="@style/IconButton"
+		android:layout_width="48dp"
+		android:layout_height="48dp"
+		android:layout_gravity="end"
+		android:layout_marginEnd="4dp"
+		app:icon="@drawable/ic_visibility"
+		app:iconSize="24dp" />
+
+	<Button
+		android:id="@+id/run_code"
+		style="@style/IconButton"
+		android:layout_width="48dp"
+		android:layout_height="48dp"
+		android:layout_gravity="end"
+		android:layout_marginEnd="4dp"
+		app:icon="@drawable/ic_play_arrow"
+		app:iconSize="24dp" />
+
+	<Button
+		android:id="@+id/show_errors"
+		style="@style/IconButton"
+		android:layout_width="48dp"
+		android:layout_height="48dp"
+		android:layout_gravity="end"
+		android:layout_marginEnd="4dp"
+		app:icon="@drawable/ic_error"
+		app:iconSize="24dp" />
+
+	<Spinner
+		android:id="@+id/quality"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_gravity="end"
+		android:layout_marginEnd="4dp" />
+</androidx.appcompat.widget.Toolbar>

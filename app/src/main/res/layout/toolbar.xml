@@ -1,0 +1,13 @@
+<androidx.appcompat.widget.Toolbar
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:id="@+id/toolbar"
+	android:layout_width="match_parent"
+	android:layout_height="?attr/actionBarSize"
+	android:background="@color/primary_translucent"
+	android:theme="@style/ThemeOverlay.Material3.ActionBar"
+	app:popupTheme="@style/ThemeOverlay.Material3"
+	app:subtitleTextAppearance="@style/Subtitle"
+	app:titleTextAppearance="@style/Title"
+	tools:ignore="Overdraw" />

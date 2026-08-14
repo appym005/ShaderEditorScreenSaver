@@ -1,0 +1,55 @@
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+	<!-- ShaderView as the background -->
+	<de.markusfisch.android.shadereditor.widget.ShaderView
+		android:id="@+id/preview"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent" />
+
+	<!-- CoordinatorLayout for managing the toolbar, drawer, and content -->
+	<androidx.coordinatorlayout.widget.CoordinatorLayout
+		android:id="@+id/main_coordinator"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent">
+
+		<!-- LinearLayout to manage vertical space -->
+		<LinearLayout
+			android:id="@+id/main_layout"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:orientation="vertical">
+
+			<include layout="@layout/toolbar_main" />
+
+			<!-- DrawerLayout with main content -->
+			<de.markusfisch.android.shadereditor.widget.TouchThruDrawerLayout
+				android:id="@+id/drawer_layout"
+				android:layout_width="match_parent"
+				android:layout_height="0dp"
+				android:layout_weight="1">
+
+				<!-- Content Frame -->
+				<androidx.coordinatorlayout.widget.CoordinatorLayout
+					android:id="@+id/content_frame"
+					android:layout_width="match_parent"
+					android:layout_height="match_parent">
+
+				</androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+				<!-- Navigation Drawer -->
+				<include layout="@layout/drawer" />
+
+			</de.markusfisch.android.shadereditor.widget.TouchThruDrawerLayout>
+
+			<!-- Extra keys row at the bottom -->
+			<include
+				layout="@layout/extra_keys"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content" />
+
+		</LinearLayout>
+
+		<!-- Nav bar background for SDK35+ -->
+		<include layout="@layout/navbar"/>
+
+	</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</merge>
