@@ -48,9 +48,19 @@ jobs:
           git -C source apply ../patchrepo/patches/0001-add-shader-screensaver.patch
           git -C source apply --check ../patchrepo/patches/0002-remove-notification-listener.patch
           git -C source apply ../patchrepo/patches/0002-remove-notification-listener.patch
+          git -C source apply --check ../patchrepo/patches/0003-add-gravitational-clock-v1.patch
+          git -C source apply ../patchrepo/patches/0003-add-gravitational-clock-v1.patch
           grep -q 'android.permission.BIND_DREAM_SERVICE' source/app/src/main/AndroidManifest.xml
           ! grep -q 'android.permission.BIND_NOTIFICATION_LISTENER_SERVICE' source/app/src/main/AndroidManifest.xml
           test -f source/app/src/main/java/de/markusfisch/android/shadereditor/service/ShaderDreamService.java
+          test -f source/app/src/main/res/raw/sample_gravitational_clock.glsl
+          grep -q 'sample_gravitational_clock' source/app/src/main/java/de/markusfisch/android/shadereditor/adapter/SamplesAdapter.java
+
+      - name: Validate Gravitational Clock GLSL
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq glslang-tools
+          glslangValidator -S frag source/app/src/main/res/raw/sample_gravitational_clock.glsl
 
       - name: Build debug APK
         working-directory: source
@@ -61,7 +71,7 @@ jobs:
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: ShaderEditor-Screensaver-safe-debug
+          name: ShaderEditor-GravitationalClock-v1-debug
           path: source/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
 
@@ -88,7 +98,10 @@ jobs:
           The sideload build removes Shader Editor's optional notification-listener
           service because Google Play Protect automatically blocks internet-sideloaded
           apps that declare that high-risk anti-fraud permission.
+
+          Includes Gravitational Clock v1 as a built-in sample: real wall-clock time
+          rendered as warped spacetime, lensing arcs, and an orbiting seconds body.
           EOF
           git add -A
-          git commit -m "Import ShaderEditor 2.36.2 with safe screen saver support"
+          git commit -m "Import ShaderEditor with Gravitational Clock v1"
           git push origin HEAD:screensaver-source --force
