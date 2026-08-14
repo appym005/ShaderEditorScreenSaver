@@ -1,0 +1,249 @@
+diff --git a/app/src/main/java/de/markusfisch/android/shadereditor/adapter/SamplesAdapter.java b/app/src/main/java/de/markusfisch/android/shadereditor/adapter/SamplesAdapter.java
+--- a/app/src/main/java/de/markusfisch/android/shadereditor/adapter/SamplesAdapter.java
++++ b/app/src/main/java/de/markusfisch/android/shadereditor/adapter/SamplesAdapter.java
+@@ -74,6 +74,10 @@ public class SamplesAdapter extends BaseAdapter {
+ 				new Sample(R.raw.sample_gravity,
+ 						R.drawable.thumbnail_gravity,
+ 						context.getString(R.string.sample_gravity_name),
+ 						context.getString(R.string.sample_gravity_rationale)),
++				new Sample(R.raw.sample_gravitational_clock,
++						R.drawable.thumbnail_default,
++						context.getString(R.string.sample_gravitational_clock_name),
++						context.getString(R.string.sample_gravitational_clock_rationale)),
+ 				new Sample(R.raw.sample_orientation,
+ 						R.drawable.thumbnail_orientation,
+ 						context.getString(R.string.sample_orientation_name),
+
+diff --git a/app/src/main/res/values/strings.xml b/app/src/main/res/values/strings.xml
+--- a/app/src/main/res/values/strings.xml
++++ b/app/src/main/res/values/strings.xml
+@@ -241,6 +241,8 @@
+ 	<string name="sample_gles_300_rationale">Use GLES version 3.00</string>
+ 	<string name="sample_gravity_name">Gravity sensor</string>
+ 	<string name="sample_gravity_rationale">How to use the gravity uniform</string>
++	<string name="sample_gravitational_clock_name">Gravitational Clock</string>
++	<string name="sample_gravitational_clock_rationale">Analog time through warped spacetime, lensing arcs, and an orbiting seconds body</string>
+ 	<string name="sample_orientation_name">Orientation</string>
+ 	<string name="sample_orientation_rationale">How to use the orienation uniform</string>
+ 	<string name="sample_swirl_name">Swirl</string>
+
+diff --git a/app/src/main/res/raw/sample_gravitational_clock.glsl b/app/src/main/res/raw/sample_gravitational_clock.glsl
+new file mode 100644
+--- /dev/null
++++ b/app/src/main/res/raw/sample_gravitational_clock.glsl
+@@ -0,0 +1,215 @@
++#ifdef GL_FRAGMENT_PRECISION_HIGH
++precision highp float;
++#else
++precision mediump float;
++#endif
++
++// Shader Editor built-ins.
++uniform vec2 resolution;
++uniform float time;
++uniform float subsecond;
++uniform vec3 daytime; // hour, minute, second
++
++#define PI 3.14159265358979323846
++#define TAU 6.28318530717958647692
++
++float hash21(vec2 p) {
++    p = fract(p * vec2(123.34, 456.21));
++    p += dot(p, p + 45.32);
++    return fract(p.x * p.y);
++}
++
++float lineGlow(float d, float width, float softness) {
++    return 1.0 - smoothstep(width, width + softness, abs(d));
++}
++
++float ringGlow(float r, float radius, float width) {
++    return exp(-abs(r - radius) / max(width, 0.0001));
++}
++
++float angularDistance(float a, float b) {
++    return abs(atan(sin(a - b), cos(a - b)));
++}
++
++// 0 at 12 o'clock, increasing clockwise.
++float clockAngle(vec2 p) {
++    float a = atan(p.x, p.y);
++    return a < 0.0 ? a + TAU : a;
++}
++
++vec3 starField(vec2 p, float r) {
++    // Two sparse deterministic layers. Keep the center clean so the clock reads well.
++    vec2 g1 = floor((p + 2.0) * 95.0);
++    vec2 g2 = floor((p + 3.0) * 157.0);
++    float n1 = hash21(g1);
++    float n2 = hash21(g2 + 19.7);
++    float s1 = smoothstep(0.992, 1.0, n1);
++    float s2 = smoothstep(0.9965, 1.0, n2);
++    float outside = smoothstep(0.63, 1.0, r);
++    float twinkle = 0.72 + 0.28 * sin(time * 0.35 + n1 * 18.0);
++    return vec3(0.38, 0.48, 0.72) * s1 * twinkle * (0.22 + 0.78 * outside)
++         + vec3(0.90, 0.68, 0.42) * s2 * (0.15 + 0.85 * outside);
++}
++
++void main(void) {
++    float scale = min(resolution.x, resolution.y);
++    vec2 p = (gl_FragCoord.xy - 0.5 * resolution.xy) / scale * 2.0;
++    float r = length(p);
++    float a = clockAngle(p);
++
++    vec3 gold = vec3(1.00, 0.58, 0.24);
++    vec3 paleGold = vec3(1.00, 0.84, 0.62);
++    vec3 violet = vec3(0.56, 0.55, 1.00);
++    vec3 cool = vec3(0.58, 0.70, 1.00);
++
++    // --- Real clock angles -------------------------------------------------
++    // Shader Editor's wall-clock seconds update once a second. subsecond keeps
++    // the orbit visually smooth between those updates.
++    float sec = mod(daytime.z + subsecond, 60.0);
++    float minute = daytime.y + sec / 60.0;
++    float hour = mod(daytime.x, 12.0) + minute / 60.0;
++
++    float secondAngle = sec / 60.0 * TAU;
++    float minuteAngle = minute / 60.0 * TAU;
++    float hourAngle = hour / 12.0 * TAU;
++
++    vec3 color = vec3(0.0);
++    color += starField(p, r);
++
++    // --- Warped spacetime grid -------------------------------------------
++    // Radial displacement bends a Cartesian grid around the central mass.
++    float bhRadius = 0.185;
++    float lens = 0.050 / (r * r + 0.035);
++    vec2 dir = p / max(r, 0.0001);
++    vec2 q = p + dir * lens;
++
++    // Compress the vertical dimension near the equatorial plane to suggest
++    // gravitational lensing rather than a flat decorative grid.
++    q.y *= 1.0 + 0.18 * exp(-r * 2.8);
++
++    float gx = abs(sin(q.x * 34.0));
++    float gy = abs(sin(q.y * 34.0));
++    float gridLine = 1.0 - smoothstep(0.0, 0.075, min(gx, gy));
++    float gridMask = smoothstep(bhRadius + 0.035, bhRadius + 0.12, r)
++                   * (1.0 - smoothstep(0.88, 1.02, r));
++    float gridFade = 0.25 + 0.75 * smoothstep(0.22, 0.72, r);
++    color += mix(vec3(0.20, 0.26, 0.38), vec3(0.38, 0.32, 0.50), 0.45)
++           * gridLine * gridMask * gridFade * 0.28;
++
++    // Faint concentric coordinate rings reinforce the geometry.
++    float polarGrid = 0.0;
++    polarGrid += ringGlow(r, 0.30, 0.0017);
++    polarGrid += ringGlow(r, 0.39, 0.0015);
++    polarGrid += ringGlow(r, 0.48, 0.0014);
++    polarGrid += ringGlow(r, 0.57, 0.0013);
++    polarGrid += ringGlow(r, 0.66, 0.0012);
++    polarGrid += ringGlow(r, 0.75, 0.0011);
++    polarGrid += ringGlow(r, 0.84, 0.0010);
++    color += vec3(0.30, 0.31, 0.47) * polarGrid * 0.26;
++
++    // --- Central mass + gravitational lens -------------------------------
++    float horizon = ringGlow(r, bhRadius, 0.010);
++    float hotRing = ringGlow(r, bhRadius + 0.035, 0.017);
++    float outerLens = ringGlow(r, bhRadius + 0.072, 0.027);
++
++    color += paleGold * horizon * 0.78;
++    color += gold * hotRing * 0.52;
++    color += violet * outerLens * 0.25;
++
++    // Equatorial caustic: bright stretched light on both sides of the mass.
++    float eq = exp(-abs(p.y) * 68.0)
++             * smoothstep(bhRadius + 0.015, bhRadius + 0.085, r)
++             * (1.0 - smoothstep(0.78, 0.95, r));
++    float eqCore = exp(-abs(p.y) * 145.0)
++                 * smoothstep(bhRadius + 0.015, bhRadius + 0.055, r)
++                 * (1.0 - smoothstep(0.52, 0.85, r));
++    color += gold * eq * 0.44;
++    color += paleGold * eqCore * 0.62;
++
++    // A soft lens halo, slightly breathing rather than visibly pulsing.
++    float breathe = 0.96 + 0.04 * sin(time * 0.42);
++    float halo = exp(-max(r - bhRadius, 0.0) * 8.0) * smoothstep(bhRadius, bhRadius + 0.025, r);
++    color += vec3(0.52, 0.39, 0.62) * halo * 0.10 * breathe;
++
++    // --- Clock indicators: lensing arcs, not hands ------------------------
++    // A very faint full ring provides a coordinate path. The caustic segment
++    // becomes bright around the current hour/minute angle.
++    float hourR = 0.735;
++    float minuteR = 0.575;
++
++    float hourBase = ringGlow(r, hourR, 0.0024);
++    float minuteBase = ringGlow(r, minuteR, 0.0021);
++    color += gold * hourBase * 0.11;
++    color += violet * minuteBase * 0.10;
++
++    float hAD = angularDistance(a, hourAngle);
++    float mAD = angularDistance(a, minuteAngle);
++
++    // Wide lens arc + bright caustic head at the exact time direction.
++    float hourArc = exp(-pow(hAD / 0.46, 2.0)) * ringGlow(r, hourR, 0.0085);
++    float minuteArc = exp(-pow(mAD / 0.38, 2.0)) * ringGlow(r, minuteR, 0.0075);
++    float hourHead = exp(-pow(hAD / 0.055, 2.0)) * ringGlow(r, hourR, 0.018);
++    float minuteHead = exp(-pow(mAD / 0.048, 2.0)) * ringGlow(r, minuteR, 0.016);
++
++    color += gold * hourArc * 0.88 + paleGold * hourHead * 0.92;
++    color += violet * minuteArc * 0.78 + cool * minuteHead * 0.92;
++
++    // Small luminous endpoints make the time readable at a glance.
++    vec2 hourPos = vec2(sin(hourAngle), cos(hourAngle)) * hourR;
++    vec2 minutePos = vec2(sin(minuteAngle), cos(minuteAngle)) * minuteR;
++    float hourDot = exp(-length(p - hourPos) * 95.0);
++    float minuteDot = exp(-length(p - minutePos) * 105.0);
++    color += paleGold * hourDot * 1.35;
++    color += vec3(0.78, 0.82, 1.0) * minuteDot * 1.45;
++
++    // --- Seconds: a small orbiting body -----------------------------------
++    float secondR = 0.655;
++    vec2 secondPos = vec2(sin(secondAngle), cos(secondAngle)) * secondR;
++    float sd = length(p - secondPos);
++    float secondBody = 1.0 - smoothstep(0.012, 0.020, sd);
++    float secondGlow = exp(-sd * 58.0);
++    color += vec3(1.0) * secondBody;
++    color += vec3(0.70, 0.78, 1.0) * secondGlow * 0.72;
++
++    // A subtle geodesic trace just behind the second body.
++    float sAD = angularDistance(a, secondAngle);
++    float secondTrack = ringGlow(r, secondR, 0.0014);
++    float secondTail = exp(-pow(sAD / 0.22, 2.0));
++    color += vec3(0.52, 0.62, 0.86) * secondTrack * secondTail * 0.34;
++
++    // --- Minimal cardinal markers -----------------------------------------
++    // Deliberately only 12/3/6/9-style ticks to avoid turning into a normal dial.
++    float cardinal = 0.0;
++    float outer = 0.875;
++    vec2 ap = abs(p);
++    float vTick = lineGlow(ap.x, 0.0026, 0.0030)
++                * (1.0 - smoothstep(0.025, 0.050, abs(r - outer)));
++    float hTick = lineGlow(ap.y, 0.0026, 0.0030)
++                * (1.0 - smoothstep(0.025, 0.050, abs(r - outer)));
++    cardinal = max(vTick, hTick);
++    color += paleGold * cardinal * 0.55;
++
++    // --- Top-of-minute spacetime pulse ------------------------------------
++    // For the first ~2.4 seconds of each minute, a lensing wave leaves the mass.
++    float pulseAge = sec;
++    float pulseLife = 1.0 - smoothstep(0.0, 2.4, pulseAge);
++    float pulseRadius = bhRadius + 0.08 + pulseAge * 0.24;
++    float pulseRing = ringGlow(r, pulseRadius, 0.010 + pulseAge * 0.003);
++    float flash = exp(-pulseAge * 2.8) * ringGlow(r, bhRadius + 0.045, 0.035);
++    color += mix(gold, violet, smoothstep(0.3, 1.8, pulseAge)) * pulseRing * pulseLife * 0.88;
++    color += paleGold * flash * 0.40;
++
++    // Black-hole core must remain genuinely black on OLED.
++    float blackCore = 1.0 - smoothstep(bhRadius - 0.012, bhRadius + 0.004, r);
++    color *= 1.0 - blackCore;
++
++    // Gentle vignette: keep the phone edges near-black and reduce burn-in load.
++    float vignette = 1.0 - smoothstep(0.72, 1.35, r);
++    color *= 0.40 + 0.60 * vignette;
++
++    // Filmic-ish compression without crushing the small glows.
++    color = color / (1.0 + color * 0.72);
++    color = pow(max(color, 0.0), vec3(0.88));
++
++    gl_FragColor = vec4(color, 1.0);
++}
