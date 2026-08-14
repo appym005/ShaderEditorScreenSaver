@@ -1,0 +1,17 @@
+diff --git a/app/src/main/AndroidManifest.xml b/app/src/main/AndroidManifest.xml
+--- a/app/src/main/AndroidManifest.xml
++++ b/app/src/main/AndroidManifest.xml
+@@ -68,13 +68,6 @@
+ 				<category android:name="android.intent.category.DEFAULT"/>
+ 			</intent-filter>
+ 		</service>
+-		<service android:name="de.markusfisch.android.shadereditor.service.NotificationService"
+-			android:exported="false"
+-			android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
+-			<intent-filter>
+-				<action android:name="android.service.notification.NotificationListenerService"/>
+-			</intent-filter>
+-		</service>
+ 
+ 		<activity
+ 			android:name=".activity.SplashActivity"
