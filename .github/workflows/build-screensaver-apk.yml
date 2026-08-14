@@ -50,13 +50,15 @@ jobs:
           git -C source apply ../patchrepo/patches/0002-remove-notification-listener.patch
           git -C source apply --check ../patchrepo/patches/0003-add-gravitational-clock-v1.patch
           git -C source apply ../patchrepo/patches/0003-add-gravitational-clock-v1.patch
+          cp patchrepo/samples/gravitational_clock_v8.glsl source/app/src/main/res/raw/sample_gravitational_clock.glsl
           grep -q 'android.permission.BIND_DREAM_SERVICE' source/app/src/main/AndroidManifest.xml
           ! grep -q 'android.permission.BIND_NOTIFICATION_LISTENER_SERVICE' source/app/src/main/AndroidManifest.xml
           test -f source/app/src/main/java/de/markusfisch/android/shadereditor/service/ShaderDreamService.java
           test -f source/app/src/main/res/raw/sample_gravitational_clock.glsl
           grep -q 'sample_gravitational_clock' source/app/src/main/java/de/markusfisch/android/shadereditor/adapter/SamplesAdapter.java
+          grep -q 'uniform sampler2D backbuffer' source/app/src/main/res/raw/sample_gravitational_clock.glsl
 
-      - name: Validate Gravitational Clock GLSL
+      - name: Validate Gravitational Clock v8 GLSL
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y -qq glslang-tools
@@ -71,7 +73,7 @@ jobs:
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: ShaderEditor-GravitationalClock-v1-debug
+          name: ShaderEditor-GravitationalClock-v8-debug
           path: source/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
 
@@ -99,9 +101,10 @@ jobs:
           service because Google Play Protect automatically blocks internet-sideloaded
           apps that declare that high-risk anti-fraud permission.
 
-          Includes Gravitational Clock v1 as a built-in sample: real wall-clock time
-          rendered as warped spacetime, lensing arcs, and an orbiting seconds body.
+          Includes Gravitational Clock v8 as a built-in sample: smooth wall-clock time
+          rendered as asymmetrical gravitational lensing, warped spacetime fabric,
+          luminous hour/minute geodesics, and an orbiting seconds body.
           EOF
           git add -A
-          git commit -m "Import ShaderEditor with Gravitational Clock v1"
+          git commit -m "Import ShaderEditor with Gravitational Clock v8"
           git push origin HEAD:screensaver-source --force
