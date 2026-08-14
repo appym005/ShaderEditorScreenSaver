@@ -42,11 +42,14 @@ jobs:
       - name: Install Android API 36
         run: sdkmanager "platforms;android-36" "build-tools;36.0.0"
 
-      - name: Apply and verify screen saver patch
+      - name: Apply and verify screen saver patches
         run: |
           git -C source apply --check ../patchrepo/patches/0001-add-shader-screensaver.patch
           git -C source apply ../patchrepo/patches/0001-add-shader-screensaver.patch
+          git -C source apply --check ../patchrepo/patches/0002-remove-notification-listener.patch
+          git -C source apply ../patchrepo/patches/0002-remove-notification-listener.patch
           grep -q 'android.permission.BIND_DREAM_SERVICE' source/app/src/main/AndroidManifest.xml
+          ! grep -q 'android.permission.BIND_NOTIFICATION_LISTENER_SERVICE' source/app/src/main/AndroidManifest.xml
           test -f source/app/src/main/java/de/markusfisch/android/shadereditor/service/ShaderDreamService.java
 
       - name: Build debug APK
@@ -58,7 +61,7 @@ jobs:
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: ShaderEditor-Screensaver-debug
+          name: ShaderEditor-Screensaver-safe-debug
           path: source/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
 
@@ -81,7 +84,11 @@ jobs:
 
           Adds Android DreamService screen-saver support and a separate
           "Set as screen saver" shader selection.
+
+          The sideload build removes Shader Editor's optional notification-listener
+          service because Google Play Protect automatically blocks internet-sideloaded
+          apps that declare that high-risk anti-fraud permission.
           EOF
           git add -A
-          git commit -m "Import ShaderEditor 2.36.2 with screen saver support"
+          git commit -m "Import ShaderEditor 2.36.2 with safe screen saver support"
           git push origin HEAD:screensaver-source --force
