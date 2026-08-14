@@ -1,0 +1,86 @@
+name: Build ShaderEditor screen saver APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - screensaver
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout screensaver patch repository
+        uses: actions/checkout@v4
+        with:
+          path: patchrepo
+
+      - name: Checkout Shader Editor 2.36.2
+        uses: actions/checkout@v4
+        with:
+          repository: markusfisch/ShaderEditor
+          ref: c00a91a8170f1cb9dc0cb6dfab578ef9cd5b817d
+          path: source
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+          cache: gradle
+          cache-dependency-path: |
+            source/**/*.gradle*
+            source/gradle/wrapper/gradle-wrapper.properties
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install Android API 36
+        run: sdkmanager "platforms;android-36" "build-tools;36.0.0"
+
+      - name: Apply and verify screen saver patch
+        run: |
+          git -C source apply --check ../patchrepo/patches/0001-add-shader-screensaver.patch
+          git -C source apply ../patchrepo/patches/0001-add-shader-screensaver.patch
+          grep -q 'android.permission.BIND_DREAM_SERVICE' source/app/src/main/AndroidManifest.xml
+          test -f source/app/src/main/java/de/markusfisch/android/shadereditor/service/ShaderDreamService.java
+
+      - name: Build debug APK
+        working-directory: source
+        run: |
+          chmod +x gradlew
+          ./gradlew :app:assembleDebug --stacktrace
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: ShaderEditor-Screensaver-debug
+          path: source/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+
+      - name: Publish full modified source branch
+        continue-on-error: true
+        working-directory: patchrepo
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch --orphan screensaver-source
+          find . -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
+          rsync -a --exclude='.git' --exclude='.github' ../source/ ./
+          cat > SCREENSAVER_FORK.md <<'EOF'
+          # Shader Editor screen saver fork
+
+          Based on markusfisch/ShaderEditor 2.36.2 at commit
+          `c00a91a8170f1cb9dc0cb6dfab578ef9cd5b817d`.
+
+          Adds Android DreamService screen-saver support and a separate
+          "Set as screen saver" shader selection.
+          EOF
+          git add -A
+          git commit -m "Import ShaderEditor 2.36.2 with screen saver support"
+          git push origin HEAD:screensaver-source --force
