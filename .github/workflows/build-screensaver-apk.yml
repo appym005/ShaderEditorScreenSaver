@@ -2,9 +2,9 @@ name: Build ShaderEditor screen saver APK
 
 on:
   workflow_dispatch:
-  push:
+  pull_request:
     branches:
-      - screensaver
+      - main
 
 permissions:
   contents: write
@@ -63,6 +63,7 @@ jobs:
           if-no-files-found: error
 
       - name: Publish full modified source branch
+        if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
         continue-on-error: true
         working-directory: patchrepo
         shell: bash
