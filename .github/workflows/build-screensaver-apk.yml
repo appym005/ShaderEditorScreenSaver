@@ -5,6 +5,9 @@ on:
   pull_request:
     branches:
       - main
+  push:
+    branches:
+      - main
 
 permissions:
   contents: write
@@ -70,7 +73,7 @@ jobs:
           chmod +x gradlew
           ./gradlew :app:assembleDebug --stacktrace
 
-      - name: Upload APK
+      - name: Upload APK to Actions
         uses: actions/upload-artifact@v4
         with:
           name: ShaderEditor-GravitationalClock-v8-debug
@@ -108,3 +111,40 @@ jobs:
           git add -A
           git commit -m "Import ShaderEditor with Gravitational Clock v8"
           git push origin HEAD:screensaver-source --force
+
+      - name: Prepare public release APK
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          cp source/app/build/outputs/apk/debug/app-debug.apk patchrepo/ShaderEditorScreenSaver-latest-debug.apk
+          cat > patchrepo/release-notes.md <<'EOF'
+          Latest debug-signed build of ShaderEditorScreenSaver.
+
+          Includes Android DreamService screen-saver support, the Play Protect compatibility fix, and the built-in Gravitational Clock v8 sample.
+
+          This APK is intended for sideloading and is debug-signed.
+          EOF
+
+      - name: Publish public Latest release
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        working-directory: patchrepo
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag -f latest "$GITHUB_SHA"
+          git push origin refs/tags/latest --force
+
+          if gh release view latest >/dev/null 2>&1; then
+            gh release upload latest ShaderEditorScreenSaver-latest-debug.apk --clobber
+            gh release edit latest \
+              --title "ShaderEditorScreenSaver — Latest" \
+              --notes-file release-notes.md
+          else
+            gh release create latest \
+              ShaderEditorScreenSaver-latest-debug.apk \
+              --verify-tag \
+              --title "ShaderEditorScreenSaver — Latest" \
+              --notes-file release-notes.md
+          fi
